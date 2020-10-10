@@ -27,6 +27,8 @@ with open("cookies.pkl", "wb") as save_cookies:
 
 photo_urls = []
 
+# todo: maybe a different array for the videos (or just refactoring photo_urls into posts_urls),
+#       don't download the video thumbnail but just the video
 def parse_results(results):
   for result in results["items"]:
     try:
@@ -34,9 +36,14 @@ def parse_results(results):
       # print("have carousel media")
       for img in carousel_imgs:
         photo_urls.append(img["images"]["standard_resolution"]["url"])
+        photo_urls.append(img["videos"]["standard_resolution"]["url"])
     except KeyError as e:
       # print("dont have it")
       photo_urls.append(result["media"]["images"]["standard_resolution"]["url"])
+      try:
+        photo_urls.append(result["media"]["videos"]["standard_resolution"]["url"])
+      except KeyError as e:
+
 
 results = api.saved_feed()
 # print(json.dumps(results["items"]))
